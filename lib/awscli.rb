@@ -3,6 +3,7 @@
 require 'aws-sdk-ec2'
 require 'aws-sdk-s3'
 require 'thor'
+require 'json'
 
 class SubCommandBase < Thor
   def self.banner(command, _namespace = nil, _subcommand = false)
@@ -16,6 +17,8 @@ end
 
 module Awscli
   class Sts < SubCommandBase
+    map ['get-caller-identity'] => :get_caller_identity
+
     # aws sts get-caller-identity
     desc 'get-caller-identity', 'get-caller-identity'
     def get_caller_identity
@@ -25,7 +28,7 @@ module Awscli
         }
       )
 
-      puts resp.to_h.to_json
+      puts JSON.pretty_generate(resp.to_h)
     end
   end
 
@@ -38,11 +41,13 @@ module Awscli
         bucket: bucket
       )
 
-      puts resp.to_h.to_json
+      puts JSON.pretty_generate(resp.to_h)
     end
   end
 
   class Ec2 < SubCommandBase
+    map ['describe-instances'] => :describe_instances
+
     desc 'describe-instances TAG', 'get instances with tag'
     def describe_instances(tag)
       client = Aws::EC2::Client.new
@@ -57,7 +62,7 @@ module Awscli
         ]
       )
 
-      puts resp.to_h.to_json
+      puts JSON.pretty_generate(resp.to_h)
     end
   end
 
