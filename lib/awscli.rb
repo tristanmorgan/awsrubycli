@@ -47,6 +47,7 @@ module Awscli
 
   class Ec2 < SubCommandBase
     map ['describe-instances'] => :describe_instances
+    map ['describe-images'] => :describe_images
 
     desc 'describe-instances TAG', 'get instances with tag'
     def describe_instances(tag)
@@ -64,9 +65,30 @@ module Awscli
 
       puts JSON.pretty_generate(resp.to_h)
     end
+
+    desc 'describe-images TAG', 'describe images with tag'
+    def describe_images(tag)
+      client = Aws::EC2::Client.new
+      resp = client.describe_images(
+        filters: [
+          {
+            name: 'tag:Name',
+            values: [
+              tag
+            ]
+          }
+        ]
+      )
+
+      puts JSON.pretty_generate(resp.to_h)
+    end
   end
 
   class Cli < Thor
+    def self.exit_on_failure?
+      true
+    end
+
     desc 'ec2 SUBCOMMAND', 'run ec2 commands'
     subcommand 'ec2', Ec2
 
