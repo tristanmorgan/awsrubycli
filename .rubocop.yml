@@ -1,0 +1,26 @@
+---
+require:
+  - rubocop-performance
+  - rubocop-rubycw
+
+Layout/LineLength:
+  Max: 120
+
+Metrics/MethodLength:
+  Max: 16
+
+Metrics/AbcSize:
+  Max: 20
+
+Bundler/GemComment:
+   Enabled: false
+   Include:
+     - Gemfile
+
+Rubycw/Rubycw:
+  Exclude:
+    - ./*.md
+
+AllCops:
+  Exclude:
+    - bin/*

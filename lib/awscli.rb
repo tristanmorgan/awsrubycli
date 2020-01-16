@@ -43,11 +43,19 @@ module Awscli
 
       puts JSON.pretty_generate(resp.to_h)
     end
+
+    desc 'pressign BUCKET KEY', 'generate a presigned URL for BUCKET and KEY'
+    def presign(bucket, key)
+      signer = Aws::S3::Presigner.new
+      url = signer.presigned_url(:get_object, bucket: bucket, key: key)
+      puts url
+    end
   end
 
   class Ec2 < SubCommandBase
     map ['describe-instances'] => :describe_instances
     map ['describe-images'] => :describe_images
+    map ['get-windows-password'] => :get_windows_password
 
     desc 'describe-instances TAG', 'get instances with tag'
     def describe_instances(tag)
@@ -81,6 +89,18 @@ module Awscli
       )
 
       puts JSON.pretty_generate(resp.to_h)
+    end
+
+    desc 'get-windows-password instance_id pem_path', 'Gets the windows password for an instance'
+    def get_windows_password(instance_id, pem_path)
+      ec2 = Aws::EC2::Client.new
+      encrypted_password = ec2.get_password_data(instance_id: instance_id).password_data
+      private_key = OpenSSL::PKey::RSA.new(File.read(pem_path))
+      decoded = Base64.decode64(encrypted_password)
+      password = private_key.private_decrypt(decoded)
+
+      puts 'The password is...'
+      puts password
     end
   end
 
