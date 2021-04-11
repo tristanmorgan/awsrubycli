@@ -12,6 +12,10 @@ Metrics/MethodLength:
 Metrics/AbcSize:
   Max: 20
 
+Naming/AccessorMethodName:
+   Exclude:
+     - lib/awscli.rb
+
 Bundler/GemComment:
    Enabled: false
    Include:
@@ -22,5 +26,7 @@ Rubycw/Rubycw:
     - ./*.md
 
 AllCops:
+  NewCops: enable
+  TargetRubyVersion: 2.6
   Exclude:
     - bin/*

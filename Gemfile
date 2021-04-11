@@ -7,12 +7,11 @@ gemspec
 
 group :development do
   # gem 'github_changelog_generator'
-  # gem 'rake'
+  gem 'rake'
   # gem 'rspec'
   gem 'rubocop'
-  # gem 'rubocop-md'
   gem 'rubocop-performance'
-  # gem 'rubocop-rake'
+  gem 'rubocop-rake'
   # gem 'rubocop-rspec'
   gem 'rubocop-rubycw'
   # gem 'yard'

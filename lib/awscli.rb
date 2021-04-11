@@ -5,8 +5,9 @@ require 'aws-sdk-s3'
 require 'thor'
 require 'json'
 
+# Subclassing Thor to allow sub commands.
 class SubCommandBase < Thor
-  def self.banner(command, _namespace = nil, _subcommand = false)
+  def self.banner(command, _namespace = nil, _subcommand = false) # rubocop:disable Style/OptionalBooleanParameter
     "#{basename} #{subcommand_prefix} #{command.usage}"
   end
 
@@ -16,6 +17,7 @@ class SubCommandBase < Thor
 end
 
 module Awscli
+  # sts sub commands
   class Sts < SubCommandBase
     map ['get-caller-identity'] => :get_caller_identity
 
@@ -32,6 +34,7 @@ module Awscli
     end
   end
 
+  # s3 sub commands
   class S3 < SubCommandBase
     # aws s3 ls s3://teamvibrato/hashicorp/consul/
     desc 'ls BUCKET', 'list objects in a bucket'
@@ -50,8 +53,19 @@ module Awscli
       url = signer.presigned_url(:get_object, bucket: bucket, key: key)
       puts url
     end
+
+    desc 'download BUCKET KEY PATH', 'Download to a PATH for BUCKET and KEY'
+    def download(bucket, key, path)
+      client = Aws::S3::Client.new
+      File.open(path, 'wb') do |file|
+        client.get_object(bucket: bucket, key: key) do |chunk|
+          file.write(chunk)
+        end
+      end
+    end
   end
 
+  # ec2 sub commands
   class Ec2 < SubCommandBase
     map ['describe-instances'] => :describe_instances
     map ['describe-images'] => :describe_images
@@ -104,6 +118,7 @@ module Awscli
     end
   end
 
+  # Adds subcommands to Thor super
   class Cli < Thor
     def self.exit_on_failure?
       true
