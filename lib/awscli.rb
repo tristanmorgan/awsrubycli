@@ -37,12 +37,19 @@ module Awscli
   # s3 sub commands
   class S3 < SubCommandBase
     # aws s3 ls s3://teamvibrato/hashicorp/consul/
-    desc 'ls BUCKET', 'list objects in a bucket'
-    def ls(bucket)
+    desc 'ls BUCKET [PREFIX]', 'list objects in a bucket'
+    def ls(bucket, prefix = nil)
       client = Aws::S3::Client.new
-      resp = client.list_objects_v2(
-        bucket: bucket
-      )
+      resp = if prefix
+               client.list_objects_v2(
+                 bucket: bucket,
+                 prefix: prefix
+               )
+             else
+               client.list_objects_v2(
+                 bucket: bucket
+               )
+             end
 
       puts JSON.pretty_generate(resp.to_h)
     end
