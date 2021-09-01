@@ -16,3 +16,5 @@ group :development do
   gem 'rubocop-rubycw'
   # gem 'yard'
 end
+
+# gem 'thor', path: '../thor'

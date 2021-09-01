@@ -13,8 +13,7 @@ Metrics/AbcSize:
   Max: 20
 
 Naming/AccessorMethodName:
-   Exclude:
-     - lib/awscli.rb
+   Enabled: false
 
 Bundler/GemComment:
    Enabled: false
