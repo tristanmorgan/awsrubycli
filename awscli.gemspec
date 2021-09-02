@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.6.0'
 
   spec.add_dependency('aws-sdk-ec2')
+  spec.add_dependency('aws-sdk-iam')
   spec.add_dependency('aws-sdk-kms')
   spec.add_dependency('aws-sdk-s3')
   spec.add_dependency('thor')

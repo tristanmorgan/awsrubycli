@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'aws-sdk-s3'
+
 require 'awscli_subcommand'
 
 module Awscli
