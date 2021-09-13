@@ -12,8 +12,18 @@ require 'awscli_sts'
 module Awscli
   # Adds subcommands to Thor super
   class Cli < Thor
+    package_name 'Aws'
     def self.exit_on_failure?
       true
+    end
+
+    map %w[--version -v] => :__version
+    desc '--version, -v', 'print the version number'
+    # print the version number
+    def __version
+      puts 'aws(ruby)cli v0.0.1'
+      puts "aws-sdk-core v#{Aws::CORE_GEM_VERSION}"
+      puts 'Homepage https://github.com/tristanmorgan/awsrubycli'
     end
 
     desc 'ec2 SUBCOMMAND', 'run ec2 commands'
