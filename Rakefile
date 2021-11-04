@@ -18,7 +18,7 @@ task :filemode do
   files.merge(dirs).each do |file|
     mode = File.stat(file).mode
     print '.'
-    if (mode & 0x7) != (mode >> 3 & 0x7)
+    if (mode & 0x7) != ((mode >> 3) & 0x7)
       puts file
       failure = true
     end

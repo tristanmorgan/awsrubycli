@@ -9,6 +9,8 @@ module Awscli
   class Ec2 < SubCommandBase
     map ['describe-instances'] => :describe_instances
     map ['describe-images'] => :describe_images
+    map ['describe-key-pairs'] => :describe_key_pairs
+    map ['delete-key-pair'] => :delete_key_pair
     map ['get-windows-password'] => :get_windows_password
 
     desc 'describe-instances TAG', 'get instances with tag'
@@ -25,6 +27,24 @@ module Awscli
           }
         ]
       )
+
+      puts JSON.pretty_generate(resp.to_h)
+    end
+
+    desc 'describe-key-pairs', 'Describes all of your key pairs'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    def describe_key_pairs
+      client = Aws::EC2::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      resp = client.describe_key_pairs
+
+      puts JSON.pretty_generate(resp.to_h)
+    end
+
+    desc 'delete-key-pair', 'Deletes a key pair'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    def delete_key_pair(name)
+      client = Aws::EC2::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      resp = client.delete_key_pair({ key_name: name })
 
       puts JSON.pretty_generate(resp.to_h)
     end
