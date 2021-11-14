@@ -3,6 +3,7 @@
 require 'thor'
 require 'json'
 
+require 'awscli_cloudformation'
 require 'awscli_ec2'
 require 'awscli_iam'
 require 'awscli_kms'
@@ -25,6 +26,9 @@ module Awscli
       puts "aws-sdk-core v#{Aws::CORE_GEM_VERSION}"
       puts 'Homepage https://github.com/tristanmorgan/awsrubycli'
     end
+
+    desc 'cloudformation SUBCOMMAND', 'run cloudformation commands'
+    subcommand 'cloudformation', Cloudformation
 
     desc 'ec2 SUBCOMMAND', 'run ec2 commands'
     subcommand 'ec2', Ec2
