@@ -10,17 +10,19 @@ module Awscli
     # aws s3 ls s3://teamvibrato/hashicorp/consul/
     desc 'ls BUCKET [PREFIX]', 'list objects in a bucket'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
-    def ls(bucket, prefix = nil)
+    def ls(bucket = nil, prefix = nil)
       client = Aws::S3::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
       resp = if prefix
                client.list_objects_v2(
                  bucket: bucket,
                  prefix: prefix
                )
-             else
+             elsif bucket
                client.list_objects_v2(
                  bucket: bucket
                )
+             else
+               client.list_buckets({})
              end
 
       puts JSON.pretty_generate(resp.to_h)
@@ -36,12 +38,23 @@ module Awscli
 
     desc 'download BUCKET KEY PATH', 'Download to a PATH for BUCKET and KEY'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
-    def download(bucket, key, path)
+    def download(bucket, key, path = nil)
       client = Aws::S3::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      path ||= File.basename(key)
       File.open(path, 'wb') do |file|
         client.get_object(bucket: bucket, key: key) do |chunk|
           file.write(chunk)
         end
+      end
+    end
+
+    desc 'upload PATH BUCKET KEY', 'Upload from a PATH to a BUCKET and KEY'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    def upload(path, bucket, key = nil)
+      client = Aws::S3::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      key ||= File.basename(path)
+      File.open(path, 'rb') do |file|
+        client.put_object(bucket: bucket, key: key, body: file)
       end
     end
   end
