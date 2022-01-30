@@ -18,6 +18,9 @@ module Awscli
       )
 
       puts JSON.pretty_generate(resp.to_h)
+    rescue Aws::STS::Errors::ServiceError => e
+      warn e.message
+      exit 1
     end
   end
 end
