@@ -11,7 +11,8 @@ module Awscli
     desc 'ls BUCKET [PREFIX]', 'list objects in a bucket'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     def ls(bucket = nil, prefix = nil)
-      client = Aws::S3::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      clientops = { endpoint: options[:endpoint], force_path_style: true }
+      client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
       resp = if prefix
                client.list_objects_v2(
                  bucket: bucket,
@@ -31,7 +32,8 @@ module Awscli
     desc 'pressign BUCKET KEY', 'generate a presigned URL for BUCKET and KEY'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     def presign(bucket, key)
-      signer = Aws::S3::Presigner.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      clientops = { endpoint: options[:endpoint], force_path_style: true }
+      signer = Aws::S3::Presigner.new(options[:endpoint] ? clientops : {})
       url = signer.presigned_url(:get_object, bucket: bucket, key: key)
       puts url
     end
@@ -39,7 +41,8 @@ module Awscli
     desc 'download BUCKET KEY PATH', 'Download to a PATH for BUCKET and KEY'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     def download(bucket, key, path = nil)
-      client = Aws::S3::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      clientops = { endpoint: options[:endpoint], force_path_style: true }
+      client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
       path ||= File.basename(key)
       File.open(path, 'wb') do |file|
         client.get_object(bucket: bucket, key: key) do |chunk|
@@ -51,7 +54,8 @@ module Awscli
     desc 'upload PATH BUCKET KEY', 'Upload from a PATH to a BUCKET and KEY'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     def upload(path, bucket, key = nil)
-      client = Aws::S3::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      clientops = { endpoint: options[:endpoint], force_path_style: true }
+      client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
       key ||= File.basename(path)
       File.open(path, 'rb') do |file|
         client.put_object(bucket: bucket, key: key, body: file)
