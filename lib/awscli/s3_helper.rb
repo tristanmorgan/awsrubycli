@@ -15,5 +15,9 @@ module Awscli
       matchdata = %r{s3://(?<bucket>\w*)/(?<key>\S*)}.match(s3_path)
       [matchdata[:bucket], matchdata[:key]]
     end
+
+    def self.s3_path?(s3_path)
+      %r{s3://\w*/\S*}.match?(s3_path)
+    end
   end
 end

@@ -41,30 +41,68 @@ module Awscli
       puts url
     end
 
-    desc 'cp SOURCE [PATH]', 'Download from SOURCE to PATH'
+    desc 'cp SOURCE [PATH]', 'Copy from SOURCE to PATH'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
-    def cp(source, path = nil)
-      bucket, key = Awscli::S3Helper.bucket_from_string(source)
-      path ||= File.basename(key)
+    def cp(source, dest = nil)
+      dest_bool = Awscli::S3Helper.s3_path?(dest)
+      source_bool = Awscli::S3Helper.s3_path?(source)
       clientops = { endpoint: options[:endpoint], force_path_style: true }
       client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
-      File.open(path, 'wb') do |file|
+      if dest_bool && source_bool
+        copy_s3_to_s3(source, dest, client)
+      elsif dest_bool
+        copy_to_s3(source, dest, client)
+      elsif source_bool
+        copy_from_s3(source, dest, client)
+      else
+        warn 'UNIMPLEMENTED: both source and dest are local paths'
+      end
+    end
+
+    desc 'rm PATH', 'delete a PATH'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    def rm(path)
+      bucket, key = Awscli::S3Helper.bucket_from_string(path)
+      clientops = { endpoint: options[:endpoint], force_path_style: true }
+      client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
+      client.delete_object(
+        {
+          bucket: bucket,
+          key: key
+        }
+      )
+    end
+
+    private
+
+    def copy_to_s3(source, dest, client)
+      bucket, key = Awscli::S3Helper.bucket_from_string(dest)
+      key ||= File.basename(source)
+      File.open(source, 'rb') do |file|
+        client.put_object(bucket: bucket, key: key, body: file)
+      end
+    end
+
+    def copy_from_s3(source, dest, client)
+      bucket, key = Awscli::S3Helper.bucket_from_string(source)
+      dest ||= File.basename(key)
+      File.open(dest, 'wb') do |file|
         client.get_object(bucket: bucket, key: key) do |chunk|
           file.write(chunk)
         end
       end
     end
 
-    desc 'upload PATH DEST', 'Upload from a PATH to a DEST'
-    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
-    def upload(path, dest)
-      bucket, key = Awscli::S3Helper.bucket_from_string(dest)
-      clientops = { endpoint: options[:endpoint], force_path_style: true }
-      client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
-      key ||= File.basename(path)
-      File.open(path, 'rb') do |file|
-        client.put_object(bucket: bucket, key: key, body: file)
-      end
+    def copy_s3_to_s3(source, dest, client)
+      dbucket, dkey = Awscli::S3Helper.bucket_from_string(dest)
+      sbucket, skey = Awscli::S3Helper.bucket_from_string(source)
+      client.copy_object(
+        {
+          copy_source: "/#{sbucket}/#{skey}",
+          bucket: dbucket,
+          key: dkey
+        }
+      )
     end
   end
 end
