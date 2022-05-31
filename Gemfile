@@ -14,5 +14,5 @@ group :development do
   gem 'rubocop-rake'
   # gem 'rubocop-rspec'
   gem 'rubocop-rubycw'
-  # gem 'yard'
+  gem 'yard'
 end

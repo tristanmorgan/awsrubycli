@@ -8,4 +8,9 @@ trap('SIGINT') do
   exit 1
 end
 
-Awscli::Cli.start
+begin
+  Awscli::Cli.start
+rescue Aws::Sigv4::Errors::MissingCredentialsError => e
+  warn e.to_s
+  exit 1
+end

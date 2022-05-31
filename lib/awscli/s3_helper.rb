@@ -7,7 +7,7 @@ module Awscli
     # separate the bucket from the key.
     # s3://teamvibrato/hashicorp/consul/consul_linux.zip
     #
-    # @param String s3_path the combined s3 path
+    # @param s3_path the combined s3 path
     # @return [Hash] with the new credentials
     #    bucket The bucket name
     #    key The path/key in the bucket

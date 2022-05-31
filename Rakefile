@@ -2,6 +2,7 @@
 
 require 'bundler/gem_tasks'
 require 'rubocop/rake_task'
+require 'yard'
 
 RuboCop::RakeTask.new do |rubocop|
   rubocop.options = ['-D']
@@ -27,4 +28,9 @@ task :filemode do
   print "\n"
 end
 
-task default: %i[filemode rubocop]
+YARD::Rake::YardocTask.new do |t|
+  t.options = ['--fail-on-warning', '--no-progress', '--files', '*.md']
+  t.stats_options = ['--list-undoc']
+end
+
+task default: %i[filemode rubocop yard]
