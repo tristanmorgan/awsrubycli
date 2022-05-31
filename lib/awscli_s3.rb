@@ -3,14 +3,16 @@
 require 'aws-sdk-s3'
 
 require 'awscli_subcommand'
+require 'awscli/s3_helper'
 
 module Awscli
   # s3 sub commands
   class S3 < SubCommandBase
     # aws s3 ls s3://teamvibrato/hashicorp/consul/
-    desc 'ls BUCKET [PREFIX]', 'list objects in a bucket'
+    desc 'ls [SOURCE]', 'list buckets or object in SOURCE'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
-    def ls(bucket = nil, prefix = nil)
+    def ls(source = nil)
+      bucket, prefix = Awscli::S3Helper.bucket_from_string(source)
       clientops = { endpoint: options[:endpoint], force_path_style: true }
       client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
       resp = if prefix
@@ -29,21 +31,23 @@ module Awscli
       puts JSON.pretty_generate(resp.to_h)
     end
 
-    desc 'pressign BUCKET KEY', 'generate a presigned URL for BUCKET and KEY'
+    desc 'pressign PATH', 'generate a presigned URL for PATH'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
-    def presign(bucket, key)
+    def presign(path)
+      bucket, key = Awscli::S3Helper.bucket_from_string(path)
       clientops = { endpoint: options[:endpoint], force_path_style: true }
       signer = Aws::S3::Presigner.new(options[:endpoint] ? clientops : {})
       url = signer.presigned_url(:get_object, bucket: bucket, key: key)
       puts url
     end
 
-    desc 'download BUCKET KEY PATH', 'Download to a PATH for BUCKET and KEY'
+    desc 'cp SOURCE [PATH]', 'Download from SOURCE to PATH'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
-    def download(bucket, key, path = nil)
+    def cp(source, path = nil)
+      bucket, key = Awscli::S3Helper.bucket_from_string(source)
+      path ||= File.basename(key)
       clientops = { endpoint: options[:endpoint], force_path_style: true }
       client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
-      path ||= File.basename(key)
       File.open(path, 'wb') do |file|
         client.get_object(bucket: bucket, key: key) do |chunk|
           file.write(chunk)
@@ -51,9 +55,10 @@ module Awscli
       end
     end
 
-    desc 'upload PATH BUCKET KEY', 'Upload from a PATH to a BUCKET and KEY'
+    desc 'upload PATH DEST', 'Upload from a PATH to a DEST'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
-    def upload(path, bucket, key = nil)
+    def upload(path, dest)
+      bucket, key = Awscli::S3Helper.bucket_from_string(dest)
       clientops = { endpoint: options[:endpoint], force_path_style: true }
       client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
       key ||= File.basename(path)
