@@ -8,9 +8,9 @@ module Awscli
     map ['get-caller-identity'] => :get_caller_identity
     map ['get-access-key-info'] => :get_access_key_info
 
-    # aws sts get-caller-identity
     desc 'get-caller-identity', 'get-caller-identity'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws sts get-caller-identity
     def get_caller_identity
       client = Aws::STS::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
       resp = client.get_caller_identity(
@@ -24,9 +24,9 @@ module Awscli
       exit 1
     end
 
-    # aws sts get-access-key-info
     desc 'get-access-key-info', 'get-caller-identity'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws sts get-access-key-info
     def get_access_key_info(key)
       client = Aws::STS::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
       resp = client.get_access_key_info(

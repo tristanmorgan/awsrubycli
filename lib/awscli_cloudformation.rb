@@ -12,6 +12,7 @@ module Awscli
 
     desc 'describe-stacks [NAME]', 'get stacks with name'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws cloudformation describe-stacks name
     def describe_stacks(name = nil)
       client = Aws::CloudFormation::Client.new(
         options[:endpoint] ? { endpoint: options[:endpoint] } : {}
@@ -25,6 +26,7 @@ module Awscli
 
     desc 'delete-stack NAME', 'delete a stack with name'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws cloudformation delete-stack name
     def delete_stack(name)
       client = Aws::CloudFormation::Client.new(
         options[:endpoint] ? { endpoint: options[:endpoint] } : {}

@@ -8,9 +8,9 @@ require 'awscli/s3_helper'
 module Awscli
   # s3 sub commands
   class S3 < SubCommandBase
-    # aws s3 ls s3://teamvibrato/hashicorp/consul/
     desc 'ls [SOURCE]', 'list buckets or object in SOURCE'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws s3 ls s3://teamvibrato/hashicorp/consul/
     def ls(source = nil)
       bucket, prefix = Awscli::S3Helper.bucket_from_string(source)
       clientops = { endpoint: options[:endpoint], force_path_style: true }
@@ -33,6 +33,7 @@ module Awscli
 
     desc 'pressign PATH', 'generate a presigned URL for PATH'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws s3 presign s3://teamvibrato/hashicorp/consul/
     def presign(path)
       bucket, key = Awscli::S3Helper.bucket_from_string(path)
       clientops = { endpoint: options[:endpoint], force_path_style: true }
@@ -43,6 +44,7 @@ module Awscli
 
     desc 'cp SOURCE [PATH]', 'Copy from SOURCE to PATH'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws s3 cp s3://teamvibrato/hashicorp/consul/file.ext
     def cp(source, dest = nil)
       dest_bool = Awscli::S3Helper.s3_path?(dest)
       source_bool = Awscli::S3Helper.s3_path?(source)
@@ -61,6 +63,7 @@ module Awscli
 
     desc 'rm PATH', 'delete a PATH'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws s3 rm s3://teamvibrato/hashicorp/consul/file.ext
     def rm(path)
       bucket, key = Awscli::S3Helper.bucket_from_string(path)
       clientops = { endpoint: options[:endpoint], force_path_style: true }

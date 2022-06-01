@@ -16,6 +16,10 @@ module Awscli
       [matchdata[:bucket], matchdata[:key]]
     end
 
+    # Test if the path looks like an s3 path.
+    #
+    # @param s3_path The path to test
+    # @return boolean if it matches
     def self.s3_path?(s3_path)
       %r{s3://\w*/\S*}.match?(s3_path)
     end
