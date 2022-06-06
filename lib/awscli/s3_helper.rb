@@ -12,6 +12,8 @@ module Awscli
     #    bucket The bucket name
     #    key The path/key in the bucket
     def self.bucket_from_string(s3_path)
+      return [nil, nil] if s3_path.nil?
+
       matchdata = %r{s3://(?<bucket>\w*)/(?<key>\S*)}.match(s3_path)
       [matchdata[:bucket], matchdata[:key]]
     end
