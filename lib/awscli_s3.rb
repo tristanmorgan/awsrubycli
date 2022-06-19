@@ -82,18 +82,15 @@ module Awscli
       bucket, key = Awscli::S3Helper.bucket_from_string(dest)
       key ||= File.basename(source)
       File.open(source, 'rb') do |file|
-        client.put_object(bucket: bucket, key: key, body: file)
+        content_md5 = [[Digest::MD5.file(source).hexdigest].pack('H*')].pack('m0')
+        client.put_object(bucket: bucket, key: key, content_md5: content_md5, body: file)
       end
     end
 
     def copy_from_s3(source, dest, client)
       bucket, key = Awscli::S3Helper.bucket_from_string(source)
       dest ||= File.basename(key)
-      File.open(dest, 'wb') do |file|
-        client.get_object(bucket: bucket, key: key) do |chunk|
-          file.write(chunk)
-        end
-      end
+      client.get_object(response_target: dest, bucket: bucket, key: key)
     end
 
     def copy_s3_to_s3(source, dest, client)
