@@ -42,6 +42,16 @@ module Awscli
       puts url
     end
 
+    desc 'mb BUCKET', 'make a new BUCKET'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws s3 mb teamvibrato
+    def mb(bucket)
+      clientops = { endpoint: options[:endpoint], force_path_style: true }
+      client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
+      resp = client.create_bucket(bucket: bucket)
+      puts JSON.pretty_generate(resp.to_h)
+    end
+
     desc 'cp SOURCE [PATH]', 'Copy from SOURCE to PATH'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws s3 cp s3://teamvibrato/hashicorp/consul/file.ext
