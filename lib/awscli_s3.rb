@@ -12,6 +12,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws s3 ls s3://teamvibrato/hashicorp/consul/
     def ls(source = nil)
+      options[:endpoint] ||= ENV.fetch('AWS_S3_ENDPOINT', nil)
       bucket, prefix = Awscli::S3Helper.bucket_from_string(source)
       clientops = { endpoint: options[:endpoint], force_path_style: true }
       client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
@@ -27,7 +28,6 @@ module Awscli
              else
                client.list_buckets({})
              end
-
       puts JSON.pretty_generate(resp.to_h)
     end
 
@@ -35,6 +35,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws s3 presign s3://teamvibrato/hashicorp/consul/
     def presign(path)
+      options[:endpoint] ||= ENV.fetch('AWS_S3_ENDPOINT', nil)
       bucket, key = Awscli::S3Helper.bucket_from_string(path)
       clientops = { endpoint: options[:endpoint], force_path_style: true }
       signer = Aws::S3::Presigner.new(options[:endpoint] ? clientops : {})
@@ -46,6 +47,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws s3 mb teamvibrato
     def mb(bucket)
+      options[:endpoint] ||= ENV.fetch('AWS_S3_ENDPOINT', nil)
       clientops = { endpoint: options[:endpoint], force_path_style: true }
       client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
       resp = client.create_bucket(bucket: bucket)
@@ -56,6 +58,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws s3 cp s3://teamvibrato/hashicorp/consul/file.ext
     def cp(source, dest = nil)
+      options[:endpoint] ||= ENV.fetch('AWS_S3_ENDPOINT', nil)
       dest_bool = Awscli::S3Helper.s3_path?(dest)
       source_bool = Awscli::S3Helper.s3_path?(source)
       clientops = { endpoint: options[:endpoint], force_path_style: true }
@@ -75,6 +78,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws s3 rm s3://teamvibrato/hashicorp/consul/file.ext
     def rm(path)
+      options[:endpoint] ||= ENV.fetch('AWS_S3_ENDPOINT', nil)
       bucket, key = Awscli::S3Helper.bucket_from_string(path)
       clientops = { endpoint: options[:endpoint], force_path_style: true }
       client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})

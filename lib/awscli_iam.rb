@@ -11,6 +11,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws iam list-users
     def list_users
+      options[:endpoint] ||= ENV.fetch('AWS_IAM_ENDPOINT', nil)
       client = Aws::IAM::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
       resp = client.list_users(
         {
@@ -24,6 +25,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws iam list-access-keys
     def list_access_keys(user_name)
+      options[:endpoint] ||= ENV.fetch('AWS_IAM_ENDPOINT', nil)
       client = Aws::IAM::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
       resp = client.list_access_keys(
         {

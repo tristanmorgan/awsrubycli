@@ -14,6 +14,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws kms list-keys
     def list_keys
+      options[:endpoint] ||= ENV.fetch('AWS_KMS_ENDPOINT', nil)
       client = Aws::KMS::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
       resp = client.list_keys(
         {
@@ -27,6 +28,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws kms create-key
     def create_key
+      options[:endpoint] ||= ENV.fetch('AWS_KMS_ENDPOINT', nil)
       client = Aws::KMS::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
       resp = client.create_key(
         {
