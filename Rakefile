@@ -11,6 +11,15 @@ RuboCop::RakeTask.new do |rubocop|
   rubocop.requires << 'rubocop-rubycw'
 end
 
+desc 'Run RSpec code examples'
+task :spec do
+  puts 'Running RSpec...'
+  require 'rspec/core'
+  runner = RSpec::Core::Runner
+  xcode = runner.run(%w[--pattern spec/**{,/*/**}/*_spec.rb --order rand --format documentation --color])
+  abort 'RSpec failed' if xcode.positive?
+end
+
 desc 'Check filemode bits'
 task :filemode do
   files = Set.new(`git ls-files -z`.split("\x0"))
@@ -33,4 +42,4 @@ YARD::Rake::YardocTask.new do |t|
   t.stats_options = ['--list-undoc']
 end
 
-task default: %i[filemode rubocop yard]
+task default: %i[filemode rubocop spec yard]

@@ -8,11 +8,12 @@ gemspec
 group :development do
   # gem 'github_changelog_generator'
   gem 'rake'
-  # gem 'rspec'
+  gem 'rspec'
   gem 'rubocop'
   gem 'rubocop-performance'
   gem 'rubocop-rake'
-  # gem 'rubocop-rspec'
+  gem 'rubocop-rspec'
   gem 'rubocop-rubycw'
+  gem 'simplecov'
   gem 'yard'
 end
