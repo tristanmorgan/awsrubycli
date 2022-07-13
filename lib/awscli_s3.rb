@@ -19,7 +19,8 @@ module Awscli
       resp = if prefix
                client.list_objects_v2(
                  bucket: bucket,
-                 prefix: prefix
+                 prefix: prefix,
+                 delimiter: '/'
                )
              elsif bucket
                client.list_objects_v2(
