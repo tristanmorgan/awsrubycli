@@ -91,6 +91,30 @@ module Awscli
       )
     end
 
+    desc 'rb bucket', 'delete a bucket'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws s3 rb s3://teamvibrato/
+    def rb(path)
+      options[:endpoint] ||= ENV.fetch('AWS_S3_ENDPOINT', nil)
+      bucket, key = Awscli::S3Helper.bucket_from_string(path)
+      unless key == ''
+        warn 'Only specify a bucket.'
+        exit 1
+      end
+      clientops = { endpoint: options[:endpoint], force_path_style: true }
+      client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
+      begin
+        client.delete_bucket(
+          {
+            bucket: bucket
+          }
+        )
+      rescue Aws::S3::Errors::BucketNotEmpty => e
+        warn e.to_s
+        exit 1
+      end
+    end
+
     private
 
     def copy_to_s3(source, dest, client)

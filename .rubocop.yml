@@ -13,6 +13,9 @@ Metrics/MethodLength:
 Metrics/AbcSize:
   Max: 20
 
+Metrics/ClassLength:
+  Exclude:
+    - lib/*.rb
 Naming/AccessorMethodName:
    Enabled: false
 
