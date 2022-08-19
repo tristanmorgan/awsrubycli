@@ -10,6 +10,7 @@ module Awscli
   class S3 < SubCommandBase
     desc 'ls [SOURCE]', 'list buckets or object in SOURCE'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    method_option :recursive, type: :boolean, desc: 'Recursivly list', default: false
     # aws s3 ls s3://teamvibrato/hashicorp/consul/
     def ls(source = nil)
       options[:endpoint] ||= ENV.fetch('AWS_S3_ENDPOINT', nil)
@@ -20,7 +21,7 @@ module Awscli
                client.list_objects_v2(
                  bucket: bucket,
                  prefix: prefix,
-                 delimiter: '/'
+                 delimiter: options[:recursive] ? nil : '/'
                )
              elsif bucket
                client.list_objects_v2(
