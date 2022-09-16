@@ -13,10 +13,10 @@ module Awscli
     method_option :recursive, type: :boolean, desc: 'Recursivly list', default: false
     # aws s3 ls s3://teamvibrato/hashicorp/consul/
     def ls(source = nil)
-      options[:endpoint] ||= ENV.fetch('AWS_S3_ENDPOINT', nil)
+      endpoint = ENV.fetch('AWS_S3_ENDPOINT', options[:endpoint])
       bucket, prefix = Awscli::S3Helper.bucket_from_string(source)
-      clientops = { endpoint: options[:endpoint], force_path_style: true }
-      client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
+      clientops = { endpoint: endpoint, force_path_style: true }
+      client = Aws::S3::Client.new(endpoint ? clientops : {})
       resp = if prefix
                client.list_objects_v2(
                  bucket: bucket,
@@ -37,10 +37,10 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws s3 presign s3://teamvibrato/hashicorp/consul/
     def presign(path)
-      options[:endpoint] ||= ENV.fetch('AWS_S3_ENDPOINT', nil)
+      endpoint = ENV.fetch('AWS_S3_ENDPOINT', options[:endpoint])
       bucket, key = Awscli::S3Helper.bucket_from_string(path)
-      clientops = { endpoint: options[:endpoint], force_path_style: true }
-      signer = Aws::S3::Presigner.new(options[:endpoint] ? clientops : {})
+      clientops = { endpoint: endpoint, force_path_style: true }
+      signer = Aws::S3::Presigner.new(endpoint ? clientops : {})
       url = signer.presigned_url(:get_object, bucket: bucket, key: key)
       puts url
     end
@@ -49,9 +49,9 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws s3 mb teamvibrato
     def mb(bucket)
-      options[:endpoint] ||= ENV.fetch('AWS_S3_ENDPOINT', nil)
-      clientops = { endpoint: options[:endpoint], force_path_style: true }
-      client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
+      endpoint = ENV.fetch('AWS_S3_ENDPOINT', options[:endpoint])
+      clientops = { endpoint: endpoint, force_path_style: true }
+      client = Aws::S3::Client.new(endpoint ? clientops : {})
       resp = client.create_bucket(bucket: bucket)
       puts JSON.pretty_generate(resp.to_h)
     end
@@ -60,11 +60,11 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws s3 cp s3://teamvibrato/hashicorp/consul/file.ext
     def cp(source, dest = nil)
-      options[:endpoint] ||= ENV.fetch('AWS_S3_ENDPOINT', nil)
+      endpoint = ENV.fetch('AWS_S3_ENDPOINT', options[:endpoint])
       dest_bool = Awscli::S3Helper.s3_path?(dest)
       source_bool = Awscli::S3Helper.s3_path?(source)
-      clientops = { endpoint: options[:endpoint], force_path_style: true }
-      client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
+      clientops = { endpoint: endpoint, force_path_style: true }
+      client = Aws::S3::Client.new(endpoint ? clientops : {})
       if dest_bool && source_bool
         copy_s3_to_s3(source, dest, client)
       elsif dest_bool
@@ -80,10 +80,10 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws s3 rm s3://teamvibrato/hashicorp/consul/file.ext
     def rm(path)
-      options[:endpoint] ||= ENV.fetch('AWS_S3_ENDPOINT', nil)
+      endpoint = ENV.fetch('AWS_S3_ENDPOINT', options[:endpoint])
       bucket, key = Awscli::S3Helper.bucket_from_string(path)
-      clientops = { endpoint: options[:endpoint], force_path_style: true }
-      client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
+      clientops = { endpoint: endpoint, force_path_style: true }
+      client = Aws::S3::Client.new(endpoint ? clientops : {})
       client.delete_object(
         {
           bucket: bucket,
@@ -96,14 +96,14 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws s3 rb s3://teamvibrato/
     def rb(path)
-      options[:endpoint] ||= ENV.fetch('AWS_S3_ENDPOINT', nil)
+      endpoint = ENV.fetch('AWS_S3_ENDPOINT', options[:endpoint])
       bucket, key = Awscli::S3Helper.bucket_from_string(path)
       unless key == ''
         warn 'Only specify a bucket.'
         exit 1
       end
-      clientops = { endpoint: options[:endpoint], force_path_style: true }
-      client = Aws::S3::Client.new(options[:endpoint] ? clientops : {})
+      clientops = { endpoint: endpoint, force_path_style: true }
+      client = Aws::S3::Client.new(endpoint ? clientops : {})
       begin
         client.delete_bucket(
           {

@@ -10,12 +10,12 @@ module Awscli
     map ['list-keys'] => :list_keys
     map ['create-key'] => :create_key
 
-    desc 'list-keys', 'list-keys'
+    desc 'list-keys', 'List KMS keys'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws kms list-keys
     def list_keys
-      options[:endpoint] ||= ENV.fetch('AWS_KMS_ENDPOINT', nil)
-      client = Aws::KMS::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      endpoint = ENV.fetch('AWS_KMS_ENDPOINT', options[:endpoint])
+      client = Aws::KMS::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.list_keys(
         {
         }
@@ -24,12 +24,12 @@ module Awscli
       puts JSON.pretty_generate(resp.to_h)
     end
 
-    desc 'create-key', 'create-key'
+    desc 'create-key', 'Create a KMS key'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws kms create-key
     def create_key
-      options[:endpoint] ||= ENV.fetch('AWS_KMS_ENDPOINT', nil)
-      client = Aws::KMS::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      endpoint = ENV.fetch('AWS_KMS_ENDPOINT', options[:endpoint])
+      client = Aws::KMS::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.create_key(
         {
         }

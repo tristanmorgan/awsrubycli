@@ -10,12 +10,12 @@ module Awscli
     map ['get-caller-identity'] => :get_caller_identity
     map ['get-access-key-info'] => :get_access_key_info
 
-    desc 'get-caller-identity', 'get-caller-identity'
+    desc 'get-caller-identity', 'Get current users details'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws sts get-caller-identity
     def get_caller_identity
-      options[:endpoint] ||= ENV.fetch('AWS_STS_ENDPOINT', nil)
-      client = Aws::STS::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      endpoint = ENV.fetch('AWS_STS_ENDPOINT', options[:endpoint])
+      client = Aws::STS::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.get_caller_identity(
         {
         }
@@ -27,12 +27,12 @@ module Awscli
       exit 1
     end
 
-    desc 'get-access-key-info', 'get-caller-identity'
+    desc 'get-access-key-info', 'Get info about access keys'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws sts get-access-key-info
     def get_access_key_info(key)
-      options[:endpoint] ||= ENV.fetch('AWS_STS_ENDPOINT', nil)
-      client = Aws::STS::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      endpoint = ENV.fetch('AWS_STS_ENDPOINT', options[:endpoint])
+      client = Aws::STS::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.get_access_key_info(
         {
           access_key_id: key # required

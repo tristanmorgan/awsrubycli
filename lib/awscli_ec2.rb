@@ -17,8 +17,8 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws ec2 describe-instances (with a tag)
     def describe_instances(tag)
-      options[:endpoint] ||= ENV.fetch('AWS_EC2_ENDPOINT', nil)
-      client = Aws::EC2::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      endpoint = ENV.fetch('AWS_EC2_ENDPOINT', options[:endpoint])
+      client = Aws::EC2::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.describe_instances(
         filters: [
           {
@@ -37,8 +37,8 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws ec2 describe-key-pairs
     def describe_key_pairs
-      options[:endpoint] ||= ENV.fetch('AWS_EC2_ENDPOINT', nil)
-      client = Aws::EC2::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      endpoint = ENV.fetch('AWS_EC2_ENDPOINT', options[:endpoint])
+      client = Aws::EC2::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.describe_key_pairs
 
       puts JSON.pretty_generate(resp.to_h)
@@ -48,8 +48,8 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws ec2 delete-key-pair
     def delete_key_pair(name)
-      options[:endpoint] ||= ENV.fetch('AWS_EC2_ENDPOINT', nil)
-      client = Aws::EC2::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      endpoint = ENV.fetch('AWS_EC2_ENDPOINT', options[:endpoint])
+      client = Aws::EC2::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.delete_key_pair({ key_name: name })
 
       puts JSON.pretty_generate(resp.to_h)
@@ -59,8 +59,8 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws ec2 describe-images
     def describe_images(tag)
-      options[:endpoint] ||= ENV.fetch('AWS_EC2_ENDPOINT', nil)
-      client = Aws::EC2::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      endpoint = ENV.fetch('AWS_EC2_ENDPOINT', options[:endpoint])
+      client = Aws::EC2::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.describe_images(
         filters: [
           {
@@ -79,8 +79,8 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws ec2 get-windows-password
     def get_windows_password(instance_id, pem_path)
-      options[:endpoint] ||= ENV.fetch('AWS_EC2_ENDPOINT', nil)
-      ec2 = Aws::EC2::Client.new(options[:endpoint] ? { endpoint: options[:endpoint] } : {})
+      endpoint = ENV.fetch('AWS_EC2_ENDPOINT', options[:endpoint])
+      ec2 = Aws::EC2::Client.new(endpoint ? { endpoint: endpoint } : {})
       encrypted_password = ec2.get_password_data(instance_id: instance_id).password_data
       private_key = OpenSSL::PKey::RSA.new(File.read(pem_path))
       decoded = Base64.decode64(encrypted_password)
