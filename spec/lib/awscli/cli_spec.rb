@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 require 'thor'
-require_relative '../../lib/awscli'
+require_relative '../../../lib/awscli'
 
 describe Awscli::Cli do
   context 'when things are left to the defaults' do

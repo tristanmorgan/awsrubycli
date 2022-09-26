@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 require 'thor'
-require_relative '../../lib/awscli_kms'
+require_relative '../../../lib/awscli_kms'
 
 describe Awscli::Kms do
   context 'when credentials available' do

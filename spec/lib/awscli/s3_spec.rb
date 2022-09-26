@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 require 'thor'
-require_relative '../../lib/awscli_s3'
+require_relative '../../../lib/awscli_s3'
 
 describe Awscli::S3 do
   context 'when credentials available' do
@@ -54,6 +54,7 @@ describe Awscli::S3 do
       expect { described_class.start(%w[ls]) }
         .to output(/buckets/).to_stdout
     end
+
     it 'calls ls s3://distribution' do
       expect { described_class.start(%w[ls s3://distribution]) }
         .to output(/common_prefixes/).to_stdout

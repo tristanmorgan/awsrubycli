@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 require 'thor'
-require_relative '../../lib/awscli_iam'
+require_relative '../../../lib/awscli_iam'
 
 describe Awscli::Iam do
   context 'when credentials available' do

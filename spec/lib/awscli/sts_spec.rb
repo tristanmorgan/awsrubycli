@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 require 'thor'
-require_relative '../../lib/awscli_sts'
+require_relative '../../../lib/awscli_sts'
 
 describe Awscli::Sts do
   context 'when credentials available' do
