@@ -18,15 +18,9 @@ module Awscli
       clientops = { endpoint: endpoint, force_path_style: true }
       client = Aws::S3::Client.new(endpoint ? clientops : {})
       resp = if prefix
-               client.list_objects_v2(
-                 bucket: bucket,
-                 prefix: prefix,
-                 delimiter: options[:recursive] ? nil : '/'
-               )
+               list_objects(client, bucket, prefix, options[:recursive])
              elsif bucket
-               client.list_objects_v2(
-                 bucket: bucket
-               )
+               list_objects(client, bucket, '', true)
              else
                client.list_buckets({})
              end
@@ -143,6 +137,17 @@ module Awscli
           key: dkey
         }
       )
+    end
+
+    def list_objects(client, bucket, prefix, recursive)
+      client.list_objects_v2(
+        bucket: bucket,
+        prefix: prefix,
+        delimiter: recursive ? nil : '/'
+      )
+    rescue Aws::S3::Errors::NoSuchBucket => e
+      warn e.to_s
+      exit 1
     end
   end
 end
