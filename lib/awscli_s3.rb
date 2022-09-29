@@ -17,10 +17,8 @@ module Awscli
       bucket, prefix = Awscli::S3Helper.bucket_from_string(source)
       clientops = { endpoint: endpoint, force_path_style: true }
       client = Aws::S3::Client.new(endpoint ? clientops : {})
-      resp = if prefix
+      resp = if bucket
                list_objects(client, bucket, prefix, options[:recursive])
-             elsif bucket
-               list_objects(client, bucket, '', true)
              else
                client.list_buckets({})
              end
