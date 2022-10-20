@@ -17,8 +17,7 @@ module Awscli
       endpoint = ENV.fetch('AWS_KMS_ENDPOINT', options[:endpoint])
       client = Aws::KMS::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.list_keys(
-        {
-        }
+        {}
       )
 
       puts JSON.pretty_generate(resp.to_h)
@@ -31,8 +30,7 @@ module Awscli
       endpoint = ENV.fetch('AWS_KMS_ENDPOINT', options[:endpoint])
       client = Aws::KMS::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.create_key(
-        {
-        }
+        {}
       )
 
       puts JSON.pretty_generate(resp.to_h)

@@ -14,8 +14,7 @@ module Awscli
       endpoint = ENV.fetch('AWS_IAM_ENDPOINT', options[:endpoint])
       client = Aws::IAM::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.list_users(
-        {
-        }
+        {}
       )
 
       puts JSON.pretty_generate(resp.to_h)

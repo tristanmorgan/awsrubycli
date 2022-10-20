@@ -17,8 +17,7 @@ module Awscli
       endpoint = ENV.fetch('AWS_STS_ENDPOINT', options[:endpoint])
       client = Aws::STS::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.get_caller_identity(
-        {
-        }
+        {}
       )
 
       puts JSON.pretty_generate(resp.to_h)
