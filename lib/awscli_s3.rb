@@ -122,7 +122,11 @@ module Awscli
     def copy_from_s3(source, dest, client)
       bucket, key = Awscli::S3Helper.bucket_from_string(source)
       dest ||= File.basename(key)
+      dest = File.join(dest, File.basename(key)) if File.directory?(dest)
       client.get_object(response_target: dest, bucket: bucket, key: key)
+    rescue Aws::S3::Errors::NoSuchKey => e
+      warn e.to_s
+      exit 1
     end
 
     def copy_s3_to_s3(source, dest, client)
@@ -135,6 +139,9 @@ module Awscli
           key: dkey
         }
       )
+    rescue Aws::S3::Errors::NoSuchKey => e
+      warn e.to_s
+      exit 1
     end
 
     def list_objects(client, bucket, prefix, recursive)

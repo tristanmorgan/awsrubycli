@@ -147,12 +147,22 @@ describe Awscli::S3 do
     before do
       allow(Aws::S3::Client).to receive(:new).and_return(s3_client)
       allow(s3_client).to receive(:get_object).and_return({})
+      allow(File).to receive(:directory?).and_call_original
+      allow(File).to receive(:directory?)
+        .with('./tmp')
+        .and_return(true)
     end
 
     it 'calls cp s3://distribution/linux/duckdns' do
       described_class.start(%w[cp s3://distribution/linux/duckdns])
       expect(s3_client).to have_received(:get_object)
         .with(response_target: 'duckdns', bucket: 'distribution', key: 'linux/duckdns')
+    end
+
+    it 'calls cp s3://distribution/linux/duckdns ./tmp' do
+      described_class.start(%w[cp s3://distribution/linux/duckdns ./tmp])
+      expect(s3_client).to have_received(:get_object)
+        .with(response_target: './tmp/duckdns', bucket: 'distribution', key: 'linux/duckdns')
     end
   end
 end
