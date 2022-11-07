@@ -17,3 +17,6 @@ group :development do
   gem 'simplecov'
   gem 'yard'
 end
+
+# Using a fork of Thor to test auto-complete
+gem 'thor', git: 'git@github.com:tristanmorgan/thor.git', branch: 'autocomplete'
