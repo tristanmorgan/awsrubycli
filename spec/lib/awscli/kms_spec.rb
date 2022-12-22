@@ -19,6 +19,10 @@ describe Awscli::Kms do
         ],
         truncated: false
       )
+      allow(kms_client).to receive(:schedule_key_deletion).and_return(
+        key_id: 'arn:aws:kms:ap-southeast-2:123456789012:key/fba78ea0-210c-4f98-813d-6215095f75b3',
+        deletion_date: '2022-12-29 16:52:12 +1100'
+      )
       allow(kms_client).to receive(:create_key).and_return(
         key_metadata: {
           aws_account_id: '123456789012',
@@ -42,11 +46,20 @@ describe Awscli::Kms do
     it 'calls list_keys' do
       expect { described_class.start(%w[list_keys]) }
         .to output(/keys/).to_stdout
+      expect(kms_client).to have_received(:list_keys)
     end
 
     it 'calls create_key' do
       expect { described_class.start(%w[create_key]) }
         .to output(/key_metadata/).to_stdout
+      expect(kms_client).to have_received(:create_key)
+    end
+
+    it 'calls delete_key' do
+      expect { described_class.start(%w[delete_key uuid-key-id 7]) }
+        .to output(/deletion_date/).to_stdout
+      expect(kms_client).to have_received(:schedule_key_deletion)
+        .with(key_id: 'uuid-key-id', pending_window_in_days: '7')
     end
   end
 end
