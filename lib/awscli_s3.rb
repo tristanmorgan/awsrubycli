@@ -44,6 +44,10 @@ module Awscli
       endpoint = ENV.fetch('AWS_S3_ENDPOINT', options[:endpoint])
       clientops = { endpoint: endpoint, force_path_style: true }
       client = Aws::S3::Client.new(endpoint ? clientops : {})
+      unless Awscli::S3Helper.s3_path?("s3://#{bucket}/test")
+        warn 'Bucket name not valid.'
+        exit 1
+      end
       resp = client.create_bucket(bucket: bucket)
       puts JSON.pretty_generate(resp.to_h)
     end
