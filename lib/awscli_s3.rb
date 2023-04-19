@@ -107,7 +107,7 @@ module Awscli
           }
         )
       rescue Aws::S3::Errors::BucketNotEmpty => e
-        warn e.to_s
+        warn e
         exit 1
       end
     end
@@ -129,7 +129,7 @@ module Awscli
       dest = File.join(dest, File.basename(key)) if File.directory?(dest)
       client.get_object(response_target: dest, bucket: bucket, key: key)
     rescue Aws::S3::Errors::NoSuchKey => e
-      warn e.to_s
+      warn e
       exit 1
     end
 
@@ -144,7 +144,7 @@ module Awscli
         }
       )
     rescue Aws::S3::Errors::NoSuchKey => e
-      warn e.to_s
+      warn e
       exit 1
     end
 
@@ -155,7 +155,7 @@ module Awscli
         delimiter: recursive ? nil : '/'
       )
     rescue Aws::S3::Errors::NoSuchBucket => e
-      warn e.to_s
+      warn e
       exit 1
     end
   end

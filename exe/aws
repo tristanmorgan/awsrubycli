@@ -11,6 +11,6 @@ end
 begin
   Awscli::Cli.start
 rescue Aws::Sigv4::Errors::MissingCredentialsError => e
-  warn e.to_s
+  warn e
   exit 1
 end
