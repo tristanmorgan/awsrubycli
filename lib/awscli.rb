@@ -22,7 +22,7 @@ module Awscli
     desc '--version, -v', 'print the version number'
     # print the version number
     def __version
-      puts 'aws(ruby)cli v0.0.2'
+      puts 'aws(ruby)cli v0.0.3'
       puts "aws-sdk-core v#{Aws::CORE_GEM_VERSION}"
       puts 'Homepage https://github.com/tristanmorgan/awsrubycli'
     end
