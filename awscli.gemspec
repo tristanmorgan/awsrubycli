@@ -7,14 +7,14 @@ Gem::Specification.new do |spec|
   spec.name          = 'awscli'
   spec.version       = '0.0.3'
   spec.authors       = ['Tristan Morgan']
-  spec.email         = ['tristan@vibrato.com.au']
+  spec.email         = ['tristan.morgan@gmail.com']
 
   spec.summary       = 'AWS cli in Ruby'
   spec.description   = 'AWS cli in Ruby'
-  spec.homepage      = 'https://github.com/servian/awsrubycli'
+  spec.homepage      = 'https://github.com/tristanmorgan/awsrubycli'
   spec.license       = 'MIT'
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^spec/|^\..*|^.*\.png}) }
+  spec.files         = %w[awscli.gemspec README.md LICENSE.txt] + Dir['exe/*', 'lib/**/*.rb']
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']

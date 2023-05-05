@@ -1,6 +1,7 @@
-.bundle/
+/.bundle/
 Gemfile.lock
-bin/
+/bin/
 /.yardoc/
 /doc/
-coverage/
+/pkg/
+/coverage/
