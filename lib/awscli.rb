@@ -4,6 +4,7 @@ require 'thor'
 require 'json'
 
 require 'awscli_cloudformation'
+require 'awscli_dynamodb'
 require 'awscli_ec2'
 require 'awscli_iam'
 require 'awscli_kms'
@@ -29,6 +30,9 @@ module Awscli
 
     desc 'cloudformation SUBCOMMAND', 'run cloudformation commands'
     subcommand 'cloudformation', Cloudformation
+
+    desc 'dynamodb SUBCOMMAND', 'run dynamodb commands'
+    subcommand 'dynamodb', Dynamodb
 
     desc 'ec2 SUBCOMMAND', 'run ec2 commands'
     subcommand 'ec2', Ec2
