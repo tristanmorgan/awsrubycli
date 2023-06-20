@@ -19,6 +19,10 @@ I was hoping to hack together some sort of reflection technique to auto-generate
       aws cloudformation delete-stack NAME       # delete a stack with name
       aws cloudformation describe-stacks [NAME]  # get stacks with name
 
+      aws dynamodb delete-table    # delete a table
+      aws dynamodb describe-table  # describe a table
+      aws dynamodb list-tables     # List tables in account
+
       aws ec2 delete-key-pair                            # Deletes a key pair
       aws ec2 describe-images TAG                        # describe images with tag
       aws ec2 describe-instances TAG                     # get instances with tag
