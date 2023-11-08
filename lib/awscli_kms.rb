@@ -15,7 +15,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws kms list-keys
     def list_keys
-      endpoint = ENV.fetch('AWS_KMS_ENDPOINT', options[:endpoint])
+      endpoint = options[:endpoint]
       client = Aws::KMS::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.list_keys(
         {}
@@ -28,7 +28,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws kms create-key
     def create_key
-      endpoint = ENV.fetch('AWS_KMS_ENDPOINT', options[:endpoint])
+      endpoint = options[:endpoint]
       client = Aws::KMS::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.create_key(
         {}
@@ -41,7 +41,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws kms delete-key
     def delete_key(key_id, days)
-      endpoint = ENV.fetch('AWS_KMS_ENDPOINT', options[:endpoint])
+      endpoint = options[:endpoint]
       client = Aws::KMS::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.schedule_key_deletion({
                                             key_id: key_id,

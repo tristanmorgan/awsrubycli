@@ -11,7 +11,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws dynamodb list-tables
     def list_tables
-      endpoint = ENV.fetch('AWS_DYNAMODB_ENDPOINT', options[:endpoint])
+      endpoint = options[:endpoint]
       client = Aws::DynamoDB::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.list_tables(
         {}
@@ -24,7 +24,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws dynamodb describe-table
     def describe_table(table_name)
-      endpoint = ENV.fetch('AWS_DYNAMODB_ENDPOINT', options[:endpoint])
+      endpoint = options[:endpoint]
       client = Aws::DynamoDB::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.describe_table(
         {
@@ -42,7 +42,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws dynamodb delete-table
     def delete_table(table_name)
-      endpoint = ENV.fetch('AWS_DYNAMODB_ENDPOINT', options[:endpoint])
+      endpoint = options[:endpoint]
       client = Aws::DynamoDB::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.delete_table(
         {

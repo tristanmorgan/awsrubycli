@@ -14,7 +14,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws cloudformation describe-stacks name
     def describe_stacks(name = nil)
-      endpoint = ENV.fetch('AWS_CLOUDFORMATION_ENDPOINT', options[:endpoint])
+      endpoint = options[:endpoint]
       client = Aws::CloudFormation::Client.new(
         endpoint ? { endpoint: endpoint } : {}
       )
@@ -29,7 +29,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws cloudformation delete-stack name
     def delete_stack(name)
-      endpoint = ENV.fetch('AWS_CLOUDFORMATION_ENDPOINT', options[:endpoint])
+      endpoint = options[:endpoint]
       client = Aws::CloudFormation::Client.new(
         endpoint ? { endpoint: endpoint } : {}
       )

@@ -14,7 +14,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws sts get-caller-identity
     def get_caller_identity
-      endpoint = ENV.fetch('AWS_STS_ENDPOINT', options[:endpoint])
+      endpoint = options[:endpoint]
       client = Aws::STS::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.get_caller_identity(
         {}
@@ -30,7 +30,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws sts get-access-key-info
     def get_access_key_info(key)
-      endpoint = ENV.fetch('AWS_STS_ENDPOINT', options[:endpoint])
+      endpoint = options[:endpoint]
       client = Aws::STS::Client.new(endpoint ? { endpoint: endpoint } : {})
       resp = client.get_access_key_info(
         {
