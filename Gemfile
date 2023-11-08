@@ -19,4 +19,4 @@ group :development do
 end
 
 # Using a fork of Thor to test auto-complete
-gem 'thor', git: 'git@github.com:tristanmorgan/thor.git', branch: 'autocomplete'
+gem 'thor', git: 'https://github.com/tristanmorgan/thor.git', branch: 'autocomplete'
