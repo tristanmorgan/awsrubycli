@@ -39,8 +39,9 @@ I was hoping to hack together some sort of reflection technique to auto-generate
       aws s3 rb bucket         # delete a bucket
       aws s3 rm PATH           # delete a PATH
 
-      aws sts get-access-key-info  # Get info about access keys
-      aws sts get-caller-identity  # Get current users details
+      aws sts decode-authorization-message MESSAGE  # Decode an authorization MESSAGE
+      aws sts get-access-key-info                   # Get info about access keys
+      aws sts get-caller-identity                   # Get current users details
 
 
 awsrubycli uses [Thor](https://github.com/rails/thor) for cli argument parsing and providing the help messages.
