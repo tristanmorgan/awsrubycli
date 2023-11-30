@@ -9,7 +9,8 @@ describe Awscli::S3 do
   context 'when testing list actions' do
     let(:s3_client) { instance_double(Aws::S3::Client) }
     let(:bucket_list) do
-      {
+      instance_double(
+        Aws::S3::Types::ListBucketsOutput,
         buckets: [
           {
             name: 'distribution',
@@ -20,10 +21,11 @@ describe Awscli::S3 do
           display_name: 'minio',
           id: '02d6176db174dc93cb1b899f7c6078f'
         }
-      }
+      )
     end
     let(:folder_list) do
-      {
+      instance_double(
+        Aws::S3::Types::ListObjectsV2Output,
         is_truncated: false,
         name: 'distribution',
         prefix: '',
@@ -44,10 +46,11 @@ describe Awscli::S3 do
           }
         ],
         key_count: 4
-      }
+      )
     end
     let(:file_list) do
-      {
+      instance_double(
+        Aws::S3::Types::ListObjectsV2Output,
         is_truncated: false,
         contents: [
           {
@@ -78,7 +81,7 @@ describe Awscli::S3 do
         delimiter: '/',
         max_keys: 1000,
         key_count: 2
-      }
+      )
     end
 
     before do

@@ -13,7 +13,7 @@ module Awscli
     method_option :recursive, type: :boolean, desc: 'Recursivly list', default: false
     method_option :path_style, type: :boolean, desc: 'Force path style endpoint', default: false
     # aws s3 ls s3://teamvibrato/hashicorp/consul/
-    def ls(source = nil) # rubocop:disable Metrics/AbcSize
+    def ls(source = nil)
       bucket, prefix = Awscli::S3Helper.bucket_from_string(source)
       clientops = {}
       clientops[:endpoint] = options[:endpoint] if options[:endpoint]
@@ -24,7 +24,7 @@ module Awscli
              else
                client.list_buckets({})
              end
-      puts JSON.pretty_generate(resp.to_h)
+      puts JSON.pretty_generate(resp)
     end
 
     desc 'pressign PATH', 'generate a presigned URL for PATH'
@@ -83,19 +83,32 @@ module Awscli
     desc 'rm PATH', 'delete a PATH'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     method_option :path_style, type: :boolean, desc: 'Force path style endpoint', default: false
+    method_option :recursive, type: :boolean, desc: 'Recursivly delete', default: false
     # aws s3 rm s3://teamvibrato/hashicorp/consul/file.ext
-    def rm(path)
+    def rm(path) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       bucket, key = Awscli::S3Helper.bucket_from_string(path)
       clientops = {}
       clientops[:endpoint] = options[:endpoint] if options[:endpoint]
       clientops[:force_path_style] = options[:path_style] if options[:path_style]
       client = Aws::S3::Client.new(clientops)
-      client.delete_object(
-        {
-          bucket: bucket,
-          key: key
-        }
-      )
+      if options[:recursive]
+        client.delete_objects(
+          {
+            bucket: bucket,
+            delete: {
+              objects: list_objects(client, bucket, key, true).contents.map { |element| { key: element.key } },
+              quiet: false
+            }
+          }
+        )
+      else
+        client.delete_object(
+          {
+            bucket: bucket,
+            key: key
+          }
+        )
+      end
     end
 
     desc 'rb bucket', 'delete a bucket'

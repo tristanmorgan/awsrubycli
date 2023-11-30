@@ -8,6 +8,7 @@ RuboCop::RakeTask.new do |rubocop|
   rubocop.options = ['-D']
   rubocop.requires << 'rubocop-performance'
   rubocop.requires << 'rubocop-rake'
+  rubocop.requires << 'rubocop-rspec'
   rubocop.requires << 'rubocop-rubycw'
 end
 
