@@ -12,6 +12,7 @@ module Awscli
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     method_option :recursive, type: :boolean, desc: 'Recursivly list', default: false
     method_option :path_style, type: :boolean, desc: 'Force path style endpoint', default: false
+    method_option :token, type: :string, desc: 'A continuation_token'
     # aws s3 ls s3://teamvibrato/hashicorp/consul/
     def ls(source = nil)
       bucket, prefix = Awscli::S3Helper.bucket_from_string(source)
@@ -20,7 +21,7 @@ module Awscli
       clientops[:force_path_style] = options[:path_style] if options[:path_style]
       client = Aws::S3::Client.new(clientops)
       resp = if bucket
-               list_objects(client, bucket, prefix, options[:recursive])
+               list_objects(client, bucket, prefix, options[:recursive], options[:token])
              else
                client.list_buckets({})
              end
@@ -96,7 +97,7 @@ module Awscli
           {
             bucket: bucket,
             delete: {
-              objects: list_objects(client, bucket, key, true).contents.map { |element| { key: element.key } },
+              objects: list_objects(client, bucket, key, true, nil).contents.map { |element| { key: element.key } },
               quiet: false
             }
           }
@@ -173,11 +174,12 @@ module Awscli
       exit 1
     end
 
-    def list_objects(client, bucket, prefix, recursive)
+    def list_objects(client, bucket, prefix, recursive, token)
       client.list_objects_v2(
         bucket: bucket,
         prefix: prefix,
-        delimiter: recursive ? nil : '/'
+        delimiter: recursive ? nil : '/',
+        continuation_token: token,
       )
     rescue Aws::S3::Errors::NoSuchBucket => e
       warn e
