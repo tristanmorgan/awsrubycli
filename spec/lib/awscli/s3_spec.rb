@@ -146,14 +146,26 @@ describe Awscli::S3 do
 
   context 'when testing copy objects' do
     let(:s3_client) { instance_double(Aws::S3::Client) }
+    let(:digester) { instance_double(Digest::MD5) }
+    let(:file_like_object) do
+      class_double(
+        File,
+        read: 'file like object'
+      )
+    end
 
     before do
       allow(Aws::S3::Client).to receive(:new).and_return(s3_client)
       allow(s3_client).to receive(:get_object).and_return({})
+      allow(s3_client).to receive(:put_object).and_return({})
+      allow(Digest::MD5).to receive(:file).and_return(digester)
+      allow(digester).to receive(:hexdigest).and_return('52214f5fd8ad4cc8ce055ea9c0701d76')
       allow(File).to receive(:directory?).and_call_original
       allow(File).to receive(:directory?)
         .with('./tmp')
         .and_return(true)
+      allow(File).to receive(:open).and_call_original
+      allow(File).to receive(:open).with('test.txt', 'rb').and_yield(file_like_object)
     end
 
     it 'calls cp s3://distribution/linux/duckdns' do
@@ -166,6 +178,17 @@ describe Awscli::S3 do
       described_class.start(%w[cp s3://distribution/linux/duckdns ./tmp])
       expect(s3_client).to have_received(:get_object)
         .with(response_target: './tmp/duckdns', bucket: 'distribution', key: 'linux/duckdns')
+    end
+
+    it 'calls cp test.txt s3://distribution/linux/' do # rubocop:disable RSpec/ExampleLength
+      described_class.start(%w[cp test.txt s3://distribution/linux/])
+      expect(s3_client).to have_received(:put_object)
+        .with(
+          bucket: 'distribution',
+          key: 'linux/test.txt',
+          content_md5: 'UiFPX9itTMjOBV6pwHAddg==',
+          body: file_like_object
+        )
     end
   end
 end

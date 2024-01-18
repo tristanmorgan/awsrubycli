@@ -14,7 +14,7 @@ module Awscli
     method_option :path_style, type: :boolean, desc: 'Force path style endpoint', default: false
     method_option :token, type: :string, desc: 'A continuation_token'
     # aws s3 ls s3://teamvibrato/hashicorp/consul/
-    def ls(source = nil)
+    def ls(source = nil) # rubocop:disable Metrics/AbcSize
       bucket, prefix = Awscli::S3Helper.bucket_from_string(source)
       clientops = {}
       clientops[:endpoint] = options[:endpoint] if options[:endpoint]
@@ -142,7 +142,7 @@ module Awscli
 
     def copy_to_s3(source, dest, client)
       bucket, key = Awscli::S3Helper.bucket_from_string(dest)
-      key ||= File.basename(source)
+      key += File.basename(source) if key.end_with?('/') || key.empty?
       File.open(source, 'rb') do |file|
         content_md5 = [[Digest::MD5.file(source).hexdigest].pack('H*')].pack('m0')
         client.put_object(bucket: bucket, key: key, content_md5: content_md5, body: file)
@@ -179,7 +179,7 @@ module Awscli
         bucket: bucket,
         prefix: prefix,
         delimiter: recursive ? nil : '/',
-        continuation_token: token,
+        continuation_token: token
       )
     rescue Aws::S3::Errors::NoSuchBucket => e
       warn e
