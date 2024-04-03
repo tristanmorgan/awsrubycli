@@ -17,11 +17,24 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 2.6.10
           bundler-cache: true
-      - name: Run tests
-        run: bundle exec rake
+      - name: Run filemode
+        run: bundle exec rake filemode
+      - name: Run Rubocop
+        run: bundle exec rake rubocop
+      - name: Run Rspec
+        run: bundle exec rake spec
+      - name: Run Yard Doc
+        run: bundle exec rake yard
+      - name: Run build Package
+        run: bundle exec rake build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: awsrubycli_gem
+          path: pkg/awscli*.gem
+          if-no-files-found: error
