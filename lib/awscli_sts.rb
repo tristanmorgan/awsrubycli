@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'aws-sdk-core'
+require 'securerandom'
 
 require 'awscli_subcommand'
 
@@ -59,6 +60,22 @@ module Awscli
     rescue Aws::STS::Errors::ServiceError => e
       warn e.message
       exit 1
+    end
+
+    desc 'generate-fake-key', 'Generate fake keys for testing'
+    # aws sts generate-fake-key
+    def generate_fake_key
+      resp = {
+        access_key: {
+          access_key_id: "AKIA#{Array.new(16) { [*'A'..'Z', *'2'..'7'].sample }.join}",
+          create_date: Time.new,
+          secret_access_key: SecureRandom.base64(30),
+          status: 'Active',
+          user_name: ENV.fetch('USER', 'awsrubycli')
+        }
+      }
+
+      puts JSON.pretty_generate(resp.to_h)
     end
   end
 end
