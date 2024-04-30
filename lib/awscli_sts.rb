@@ -62,6 +62,23 @@ module Awscli
       exit 1
     end
 
+    desc 'passcheck PASSWORD', 'check a password'
+    # aws sts passcheck PASSWORD
+    def passcheck(password = nil)
+      password ||= Thor::LineEditor.readline('Enter test password: ', echo: false).strip
+      sha1 = OpenSSL::Digest.new('SHA1')
+      digest = sha1.digest(password).unpack1('H*').upcase
+
+      uri       = URI("https://api.pwnedpasswords.com/range/#{digest[0..4]}")
+      request   = Net::HTTP.new(uri.host, uri.port)
+      request.use_ssl = true
+      returned_content = request.get(uri).body
+
+      raise 'insecure password' if returned_content.include?(digest[5..])
+
+      puts 'Password does not appear in a leak.'
+    end
+
     desc 'generate-fake-key', 'Generate fake keys for testing'
     # aws sts generate-fake-key
     def generate_fake_key

@@ -43,6 +43,7 @@ I was hoping to hack together some sort of reflection technique to auto-generate
       aws sts generate-fake-key                     # Generate fake keys for testing
       aws sts get-access-key-info                   # Get info about access keys
       aws sts get-caller-identity                   # Get current users details
+      aws sts passcheck PASSWORD                    # check a password
 
 
 awsrubycli uses [Thor](https://github.com/rails/thor) for cli argument parsing and providing the help messages.
