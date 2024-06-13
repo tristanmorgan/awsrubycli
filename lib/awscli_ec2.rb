@@ -10,6 +10,7 @@ module Awscli
     map ['describe-instances'] => :describe_instances
     map ['describe-images'] => :describe_images
     map ['describe-key-pairs'] => :describe_key_pairs
+    map ['describe-subnets'] => :describe_subnets
     map ['delete-key-pair'] => :delete_key_pair
     map ['get-windows-password'] => :get_windows_password
 
@@ -44,6 +45,16 @@ module Awscli
       puts JSON.pretty_generate(resp.to_h)
     end
 
+    desc 'describe-subnetss', 'Describes subnets`s'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws ec2 describe-subnets
+    def describe_subnets
+      endpoint = options[:endpoint]
+      client = Aws::EC2::Client.new(endpoint ? { endpoint: endpoint } : {})
+      resp = client.describe_subnets
+
+      puts JSON.pretty_generate(resp.to_h)
+    end
     desc 'delete-key-pair', 'Deletes a key pair'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws ec2 delete-key-pair
