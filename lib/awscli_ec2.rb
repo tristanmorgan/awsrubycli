@@ -14,6 +14,21 @@ module Awscli
     map ['delete-key-pair'] => :delete_key_pair
     map ['get-windows-password'] => :get_windows_password
 
+    desc 'create-key-pair NAME', 'create a new key-pair'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws ec2 create-key-pair name
+    def create_key_pair(name)
+      endpoint = options[:endpoint]
+      client = Aws::EC2::Client.new(endpoint ? { endpoint: endpoint } : {})
+      resp = client.create_key_pair({
+                                      key_name: name
+                                    })
+
+      File.new("#{name}-key.pem", 'w').write resp.key_material
+      resp.key_material = nil
+      puts JSON.pretty_generate(resp.to_h)
+    end
+
     desc 'describe-instances TAG', 'get instances with tag'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws ec2 describe-instances (with a tag)
@@ -55,6 +70,7 @@ module Awscli
 
       puts JSON.pretty_generate(resp.to_h)
     end
+
     desc 'delete-key-pair', 'Deletes a key pair'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws ec2 delete-key-pair

@@ -23,11 +23,14 @@ I was hoping to hack together some sort of reflection technique to auto-generate
       aws dynamodb describe-table  # describe a table
       aws dynamodb list-tables     # List tables in account
 
+      aws ec2 create-key-pair NAME                       # create a new key-pair
       aws ec2 delete-key-pair                            # Deletes a key pair
       aws ec2 describe-images TAG                        # describe images with tag
       aws ec2 describe-instances TAG                     # get instances with tag
       aws ec2 describe-key-pairs                         # Describes all of your key pairs
+      aws ec2 describe-subnetss                          # Describes subnets`s
       aws ec2 get-windows-password instance_id pem_path  # Gets the windows password for an instance
+      aws ec2 help [COMMAND]                             # Describe subcommands or one specific subcommand
 
       aws iam list-access-keys  # List access keys for User
       aws iam list-users        # List users in account
