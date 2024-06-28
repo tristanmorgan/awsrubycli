@@ -13,6 +13,7 @@ module Awscli
     map ['describe-subnets'] => :describe_subnets
     map ['delete-key-pair'] => :delete_key_pair
     map ['get-windows-password'] => :get_windows_password
+    map ['get-console-output'] => :get_console_output
 
     desc 'create-key-pair NAME', 'create a new key-pair'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
@@ -47,6 +48,22 @@ module Awscli
       )
 
       puts JSON.pretty_generate(resp.to_h)
+    end
+
+    desc 'describe-instances TAG', 'get_console_output from and instance'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws ec2 get-console-output
+    def get_console_output(instance)
+      require 'base64'
+      endpoint = options[:endpoint]
+      client = Aws::EC2::Client.new(endpoint ? { endpoint: endpoint } : {})
+      resp = client.get_console_output(
+        {
+          instance_id: instance
+        }
+      )
+
+      puts Base64.decode64(resp.output)
     end
 
     desc 'describe-key-pairs', 'Describes all of your key pairs'
