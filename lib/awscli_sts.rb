@@ -83,13 +83,11 @@ module Awscli
     # aws sts generate-fake-key
     def generate_fake_key
       resp = {
-        access_key: {
-          access_key_id: "AKIA#{Array.new(16) { [*'A'..'Z', *'2'..'7'].sample }.join}",
-          create_date: Time.new,
-          secret_access_key: SecureRandom.base64(30),
-          status: 'Active',
-          user_name: ENV.fetch('USER', 'awsrubycli')
-        }
+        Version: 1,
+        AccessKeyId: "AKIA#{Array.new(16) { [*'A'..'Z', *'2'..'7'].sample }.join}",
+        SecretAccessKey: SecureRandom.base64(30),
+        SessionToken: nil,
+        Expiration: (Time.new + (3600 * 12)).iso8601
       }
 
       puts JSON.pretty_generate(resp.to_h)
