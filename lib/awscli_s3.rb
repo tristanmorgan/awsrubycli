@@ -81,6 +81,24 @@ module Awscli
       end
     end
 
+    desc 'touch PATH', 'touch a PATH'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    method_option :path_style, type: :boolean, desc: 'Force path style endpoint', default: false
+    # aws s3 touch s3://teamvibrato/hashicorp/consul/
+    def touch(dest = nil)
+      dest_bool = Awscli::S3Helper.s3_path?(dest)
+      clientops = {}
+      clientops[:endpoint] = options[:endpoint] if options[:endpoint]
+      clientops[:force_path_style] = options[:path_style] if options[:path_style]
+      client = Aws::S3::Client.new(clientops)
+      if dest_bool
+        bucket, key = Awscli::S3Helper.bucket_from_string(dest)
+        client.put_object(bucket: bucket, key: key, content_md5: 'd41d8cd98f00b204e9800998ecf8427e', body: '')
+      else
+        warn 'UNIMPLEMENTED: dest is a local path'
+      end
+    end
+
     desc 'rm PATH', 'delete a PATH'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     method_option :path_style, type: :boolean, desc: 'Force path style endpoint', default: false
