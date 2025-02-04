@@ -45,10 +45,5 @@ describe Awscli::Sts do
         .to output(/account/).to_stdout
       expect(sts_client).to have_received(:get_access_key_info).with({ access_key_id: 'AKIA1234567890ABCDEF' })
     end
-
-    it 'calls generate_fake_key' do
-      expect { described_class.start(%w[generate_fake_key]) }
-        .to output(/AKIA[A-Z234567]{16}/).to_stdout
-    end
   end
 end

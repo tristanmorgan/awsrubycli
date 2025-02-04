@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'aws-sdk-core'
-require 'securerandom'
 
 require 'awscli_subcommand'
 
@@ -77,20 +76,6 @@ module Awscli
       raise 'insecure password' if returned_content.include?(digest[5..])
 
       puts 'Password does not appear in a leak.'
-    end
-
-    desc 'generate-fake-key', 'Generate fake keys for testing'
-    # aws sts generate-fake-key
-    def generate_fake_key
-      resp = {
-        Version: 1,
-        AccessKeyId: "AKIA#{Array.new(16) { [*'A'..'Z', *'2'..'7'].sample }.join}",
-        SecretAccessKey: SecureRandom.base64(30),
-        SessionToken: nil,
-        Expiration: (Time.new + (3600 * 12)).iso8601
-      }
-
-      puts JSON.pretty_generate(resp.to_h)
     end
   end
 end
