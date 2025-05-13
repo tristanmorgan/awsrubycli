@@ -7,14 +7,6 @@ require 'awscli_subcommand'
 module Awscli
   # ec2 sub commands
   class Ec2 < SubCommandBase
-    map ['describe-instances'] => :describe_instances
-    map ['describe-images'] => :describe_images
-    map ['describe-key-pairs'] => :describe_key_pairs
-    map ['describe-subnets'] => :describe_subnets
-    map ['delete-key-pair'] => :delete_key_pair
-    map ['get-windows-password'] => :get_windows_password
-    map ['get-console-output'] => :get_console_output
-
     desc 'create-key-pair NAME', 'create a new key-pair'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws ec2 create-key-pair name

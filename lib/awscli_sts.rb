@@ -7,10 +7,6 @@ require 'awscli_subcommand'
 module Awscli
   # sts sub commands
   class Sts < SubCommandBase
-    map ['decode-authorization-message'] => :decode_authorization_message
-    map ['get-caller-identity'] => :get_caller_identity
-    map ['get-access-key-info'] => :get_access_key_info
-
     desc 'decode-authorization-message MESSAGE', 'Decode an authorization MESSAGE'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws sts decode-authorization-message MESSAGE

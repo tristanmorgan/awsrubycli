@@ -7,9 +7,6 @@ require 'awscli_subcommand'
 module Awscli
   # ec2 sub commands
   class Cloudformation < SubCommandBase
-    map ['describe-stacks'] => :describe_stacks
-    map ['delete-stack'] => :delete_stack
-
     desc 'describe-stacks [NAME]', 'get stacks with name'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws cloudformation describe-stacks name

@@ -7,9 +7,18 @@ require 'awscli_subcommand'
 module Awscli
   # sts sub commands
   class Kms < SubCommandBase
-    map ['list-keys'] => :list_keys
-    map ['create-key'] => :create_key
-    map ['delete-key'] => :delete_key
+    desc 'list-aliases', 'List KMS key aliases'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws kms list-aliases
+    def list_aliases
+      endpoint = options[:endpoint]
+      client = Aws::KMS::Client.new(endpoint ? { endpoint: endpoint } : {})
+      resp = client.list_aliases(
+        {}
+      )
+
+      puts JSON.pretty_generate(resp.to_h)
+    end
 
     desc 'list-keys', 'List KMS keys'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'

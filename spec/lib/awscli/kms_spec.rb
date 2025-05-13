@@ -19,6 +19,16 @@ describe Awscli::Kms do
         ],
         truncated: false
       )
+      allow(kms_client).to receive(:list_aliases).and_return(
+        aliases: [
+          {
+            alias_name: 'alias/vault',
+            alias_arn: 'arn:aws:kms:ap-southeast-2:123456789012:alias/vault',
+            target_key_id: '2632ba26-1619-4c34-af7e-d4416f110161'
+          }
+        ],
+        truncated: false
+      )
       allow(kms_client).to receive(:schedule_key_deletion).and_return(
         key_id: 'arn:aws:kms:ap-southeast-2:123456789012:key/fba78ea0-210c-4f98-813d-6215095f75b3',
         deletion_date: '2022-12-29 16:52:12 +1100'
@@ -41,6 +51,12 @@ describe Awscli::Kms do
           ]
         }
       )
+    end
+
+    it 'calls list_aliases' do
+      expect { described_class.start(%w[list_aliases]) }
+        .to output(/target_key_id/).to_stdout
+      expect(kms_client).to have_received(:list_aliases)
     end
 
     it 'calls list_keys' do
