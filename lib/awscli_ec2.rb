@@ -25,18 +25,23 @@ module Awscli
     desc 'describe-instances TAG', 'get instances with tag'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws ec2 describe-instances (with a tag)
-    def describe_instances(tag)
+    def describe_instances(tag = nil)
       endpoint = options[:endpoint]
       client = Aws::EC2::Client.new(endpoint ? { endpoint: endpoint } : {})
+      filter = if tag.nil?
+                 {}
+               else
+                 { filters: [
+                   {
+                     name: 'tag:Name',
+                     values: [
+                       tag
+                     ]
+                   }
+                 ] }
+               end
       resp = client.describe_instances(
-        filters: [
-          {
-            name: 'tag:Name',
-            values: [
-              tag
-            ]
-          }
-        ]
+        filter
       )
 
       puts JSON.pretty_generate(resp.to_h)
