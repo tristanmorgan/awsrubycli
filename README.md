@@ -43,7 +43,7 @@ I was hoping to hack together some sort of reflection technique to auto-generate
       aws s3 rm PATH           # delete a PATH
 
       aws sts decode-authorization-message MESSAGE  # Decode an authorization MESSAGE
-      aws sts get-access-key-info                   # Get info about access keys
+      aws sts get-access-key-info ACCESS_KEY        # Get info about access keys
       aws sts get-caller-identity                   # Get current users details
       aws sts passcheck PASSWORD                    # check a password
 

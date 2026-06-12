@@ -39,7 +39,7 @@ module Awscli
       exit 1
     end
 
-    desc 'get-access-key-info', 'Get info about access keys'
+    desc 'get-access-key-info ACCESS_KEY', 'Get info about access keys'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws sts get-access-key-info
     def get_access_key_info(key)
