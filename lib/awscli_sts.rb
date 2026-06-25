@@ -57,6 +57,45 @@ module Awscli
       exit 1
     end
 
+    desc 'get-token', 'Get a session token'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    method_option :name, type: :string, desc: 'name of federated user'
+    method_option :code, type: :string, desc: 'mfa code'
+    method_option :role_arn, type: :string, desc: 'ARN of policy to use'
+    method_option :mfa_arn, type: :string, desc: 'ARN of mfa to use'
+    method_option :duration, type: :numeric, desc: 'duration in seconds'
+    # get-token
+    def get_token # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+      endpoint = options[:endpoint]
+      client = Aws::STS::Client.new(endpoint ? { endpoint: endpoint } : {})
+
+      resp =
+        if options[:role_arn]
+          client.assume_role(
+            duration_seconds: options[:duration].to_i,
+            role_arn: options[:role_arn],
+            role_session_name: options[:name]
+          )
+        elsif options[:code]
+          client.get_session_token(
+            duration_seconds: options[:duration].to_i,
+            serial_number: options[:mfa_arn],
+            token_code: options[:code]
+          )
+        else
+          client.get_federation_token(
+            name: options[:name],
+            policy: ADMIN_POLICY,
+            duration_seconds: options[:duration]
+          )
+        end
+
+      puts JSON.pretty_generate(resp.to_h)
+    rescue Aws::STS::Errors::ServiceError => e
+      warn e.message
+      exit 1
+    end
+
     desc 'passcheck PASSWORD', 'check a password'
     # aws sts passcheck PASSWORD
     def passcheck(password = nil)
