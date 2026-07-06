@@ -7,6 +7,16 @@ require 'awscli_subcommand'
 module Awscli
   # sts sub commands
   class Sts < SubCommandBase
+    # Admin policy as json
+    ADMIN_POLICY = {
+      Version: '2012-10-17',
+      Statement: [{
+        Action: '*',
+        Resource: '*',
+        Effect: 'Allow'
+      }]
+    }.to_json.freeze
+
     desc 'decode-authorization-message MESSAGE', 'Decode an authorization MESSAGE'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws sts decode-authorization-message MESSAGE

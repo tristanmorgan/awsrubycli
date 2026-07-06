@@ -20,7 +20,7 @@ module Awscli
       puts JSON.pretty_generate(resp.to_h)
     end
 
-    desc 'list-access-keys', 'List access keys for User'
+    desc 'list-access-keys USER_NAME', 'List access keys for user'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws iam list-access-keys
     def list_access_keys(user_name)
@@ -29,6 +29,36 @@ module Awscli
       resp = client.list_access_keys(
         {
           user_name: user_name
+        }
+      )
+
+      puts JSON.pretty_generate(resp.to_h)
+    end
+
+    desc 'get-user', 'get user in account'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws iam get-user user_name
+    def get_user(user_name)
+      endpoint = options[:endpoint]
+      client = Aws::IAM::Client.new(endpoint ? { endpoint: endpoint } : {})
+      resp = client.get_user(
+        {
+          user_name: user_name
+        }
+      )
+
+      puts JSON.pretty_generate(resp.to_h)
+    end
+
+    desc 'get-role', 'get user in account'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws iam get-role role_name
+    def get_role(role_name)
+      endpoint = options[:endpoint]
+      client = Aws::IAM::Client.new(endpoint ? { endpoint: endpoint } : {})
+      resp = client.get_role(
+        {
+          role_name: role_name
         }
       )
 
