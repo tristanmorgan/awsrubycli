@@ -32,8 +32,12 @@ I was hoping to hack together some sort of reflection technique to auto-generate
       aws ec2 describe-subnetss                          # Describes subnets`s
       aws ec2 get-windows-password instance_id pem_path  # Gets the windows password for an instance
 
-      aws iam list-access-keys  # List access keys for User
-      aws iam list-users        # List users in account
+      aws iam delete-access-key ACCESS_KEY  # Delete an access key
+      aws iam get-role ROLE_NAME            # get user in account
+      aws iam get-user USER_NAME            # get user in account
+      aws iam list-access-keys USER_NAME    # List access keys for user
+      aws iam list-roles                    # List roles in account
+      aws iam list-users                    # List users in account
 
       aws s3 cp SOURCE [PATH]  # Copy from SOURCE to PATH
       aws s3 ls [SOURCE]       # list buckets or object in SOURCE
@@ -45,6 +49,7 @@ I was hoping to hack together some sort of reflection technique to auto-generate
       aws sts decode-authorization-message MESSAGE  # Decode an authorization MESSAGE
       aws sts get-access-key-info ACCESS_KEY        # Get info about access keys
       aws sts get-caller-identity                   # Get current users details
+      aws sts get-token                             # Get a session token
       aws sts passcheck PASSWORD                    # check a password
 
 

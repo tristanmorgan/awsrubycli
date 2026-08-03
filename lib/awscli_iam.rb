@@ -20,6 +20,19 @@ module Awscli
       puts JSON.pretty_generate(resp.to_h)
     end
 
+    desc 'list-roles', 'List roles in account'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws iam list-roles
+    def list_roles
+      endpoint = options[:endpoint]
+      client = Aws::IAM::Client.new(endpoint ? { endpoint: endpoint } : {})
+      resp = client.list_roles(
+        {}
+      )
+
+      puts JSON.pretty_generate(resp.to_h)
+    end
+
     desc 'list-access-keys USER_NAME', 'List access keys for user'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws iam list-access-keys
@@ -35,7 +48,7 @@ module Awscli
       puts JSON.pretty_generate(resp.to_h)
     end
 
-    desc 'get-user', 'get user in account'
+    desc 'get-user USER_NAME', 'get user in account'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws iam get-user user_name
     def get_user(user_name)
@@ -50,7 +63,22 @@ module Awscli
       puts JSON.pretty_generate(resp.to_h)
     end
 
-    desc 'get-role', 'get user in account'
+    desc 'delete-access-key ACCESS_KEY', 'Delete an access key'
+    method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
+    # aws iam delete-access-key
+    def delete_access_key(access_key_id)
+      endpoint = options[:endpoint]
+      client = Aws::IAM::Client.new(endpoint ? { endpoint: endpoint } : {})
+      resp = client.delete_access_key(
+        {
+          access_key_id: access_key_id
+        }
+      )
+
+      puts JSON.pretty_generate(resp.to_h)
+    end
+
+    desc 'get-role ROLE_NAME', 'get user in account'
     method_option :endpoint, type: :string, desc: 'Endpoint to connect to'
     # aws iam get-role role_name
     def get_role(role_name)
